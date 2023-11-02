@@ -1,1 +1,1 @@
-# DigitalLibrarySpringJPAUpdatedApp
+# DigitalLibrarySpringDataJPAApp

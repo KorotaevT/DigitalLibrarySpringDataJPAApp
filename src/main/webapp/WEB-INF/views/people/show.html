@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Person</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: lightskyblue;
+        }
+        h1 {
+            text-align: center;
+            margin: 0px 0 20px 0;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .book-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .book-table th, .book-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        .book-table th {
+            background-color: #f2f2f2; /* Light gray background for headers */
+        }
+        .book-table tr:nth-child(even) {
+            background-color: #f9f9f9; /* Alternate row color 1 */
+        }
+        .book-table tr:nth-child(odd) {
+            background-color: #e3e3e3; /* Alternate row color 2 */
+        }
+        .edit-form {
+            margin-top: 20px;
+        }
+        .edit-form input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .edit-form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        hr {
+            border: 0;
+            height: 5px;
+            background: black;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center;">Client information</h1>
+
+<p><strong>Name:</strong> <span th:text="${person.getName()}">Value</span></p>
+<p><strong>Surname:</strong> <span th:text="${person.getSurname()}">Value</span></p>
+<p><strong>Patronymic:</strong> <span th:text="${person.getPatronymic()}">Value</span></p>
+<p><strong>Year of birth:</strong> <span th:text="${person.getYear_of_birth()}">Value</span></p>
+
+<hr/>
+
+<div th:if="${books.isEmpty()}">
+    <p>The person has not taken any books yet.</p>
+    <hr/>
+</div>
+
+<div th:if="${!books.isEmpty()}">
+    <b>Books:</b>
+    <br/>
+    <table class="book-table">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+        </tr>
+        <tr th:each="book, iterStat : ${books}" th:class="${iterStat.odd} ? 'odd-row' : 'even-row'">
+            <td th:text="${book.getBook()}"></td>
+            <td th:text="${book.getAuthor()}"></td>
+            <td th:text="${book.getYear()}"></td>
+        </tr>
+    </table>
+    <hr/>
+</div>
+
+<div class="edit-form">
+    <form th:method="GET" th:action="@{/people/{id}/edit(id = ${person.getId()})}" th:object="${person}">
+        <input type="submit" value="Edit"/>
+    </form>
+
+    <br>
+
+    <form th:method="DELETE" th:action="@{/people/{id}(id = ${person.getId()})}" th:object="${person}">
+        <input type="submit" value="Delete"/>
+    </form>
+
+</div>
+
+</body>
+</html>

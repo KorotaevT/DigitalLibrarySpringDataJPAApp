@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Person</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: lightskyblue;
+        }
+        h1 {
+            text-align: center;
+            margin: 0px 0 20px 0;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .book-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .book-table th, .book-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        .edit-form {
+            margin-top: 20px;
+        }
+        .edit-form input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .edit-form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        hr {
+            border: 0;
+            height: 5px;
+            background: black;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1 style="text-align: center;">Book information</h1>
+
+<p><strong>Book name:</strong> <span th:text="${book.getBook()}">Value</span></p>
+<p><strong>Author:</strong> <span th:text="${book.getAuthor()}">Value</span></p>
+<p><strong>Year:</strong> <span th:text="${book.getYear()}">Value</span></p>
+<hr/>
+
+<div th:if="${owner}">
+    <span><strong>Book owner: </strong></span> <span th:text="${owner.getName() + ' ' + owner.getSurname() + ' ' + owner.getPatronymic()}">Person name</span>
+
+    <form th:method="PATCH" th:action="@{/books/{isbn}/release(isbn = ${book.getIsbn()})}">
+        <div class="edit-form">
+        <input type="submit" value="Free the book"/>
+        </div>
+    </form>
+</div>
+
+<div th:if="${people}">
+    <span>This way the book is free. Release?</span>
+    <form th:method="PATCH" th:action="@{/books/{isbn}/assign(isbn = ${book.getIsbn()})}" th:object="${book}">
+    <label for="person">Select person</label>
+        <select th:object="${person}" th:field="*{id}" id="person">
+            <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName() + ' ' + person.getSurname() + ' ' + person.getPatronymic()}"></option>
+        </select>
+        <div class="edit-form">
+        <input type="submit" value="Assign a book"/>
+        </div>
+    </form>
+</div>
+
+
+<div class="edit-form">
+    <form th:method="GET" th:action="@{/books/{isbn}/edit(isbn = ${book.getIsbn()})}" th:object="${book}">
+        <input type="submit" value="Edit"/>
+    </form>
+
+    <br>
+
+    <form th:method="DELETE" th:action="@{/books/{isbn}(isbn = ${book.getIsbn()})}" th:object="${book}">
+        <input type="submit" value="Delete"/>
+    </form>
+
+</div>
+
+</body>
+</html>
