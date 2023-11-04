@@ -1,59 +1,69 @@
 package ru.korotaev.libraryapp.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+@Entity
+@Table(name = "book")
 public class Book {
-    private Long isbn;
+
+    @Id
+    @Column(name = "book_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int book_id;
 
     @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 100, message = "Enter correct name")
-    private String book;
+    @Size(max = 255, message = "Enter correct name")
+    @Column(name = "name")
+    private String name;
 
     @NotEmpty(message = "Author should not be empty")
-    @Size(min = 2, max = 100, message = "Enter correct name")
-    private String author;
+    @Size(max = 255, message = "Enter correct name")
+    @Column(name = "author_id")
+    private int author_id;
 
-    private int year;
+    @Column(name = "desription")
+    private String desription;
 
-    public Book(String book, String author, int year) {
-        this.book = book;
-        this.author = author;
-        this.year = year;
+    public Book(String name, int author_id, String desription) {
+        this.name = name;
+        this.author_id = author_id;
+        this.desription = desription;
     }
 
     public Book() {}
 
-    public Long getIsbn() {
-        return isbn;
+    public int getBook_id() {
+        return book_id;
     }
 
-    public void setIsbn(Long isbn) {
-        this.isbn = isbn;
+    public void setBook_id(int book_id) {
+        this.book_id = book_id;
     }
 
-    public String getBook() {
-        return book;
+    public String getName() {
+        return name;
     }
 
-    public void setBook(String book) {
-        this.book = book;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getAuthor() {
-        return author;
+    public int getAuthor_id() {
+        return author_id;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor_id(int author_id) {
+        this.author_id = author_id;
     }
 
-    public int getYear() {
-        return year;
+    public String getDesription() {
+        return desription;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setDesription(String desription) {
+        this.desription = desription;
     }
 }

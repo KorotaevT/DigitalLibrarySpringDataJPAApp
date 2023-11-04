@@ -16,7 +16,7 @@ public class LibraryDispatcherServletInitializer extends AbstractAnnotationConfi
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {SpringConfig.class};
+        return new Class[] {ru.korotaev.libraryapp.config.SpringConfig.class};
     }
 
     @Override
