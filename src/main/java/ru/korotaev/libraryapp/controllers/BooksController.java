@@ -6,29 +6,32 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.korotaev.libraryapp.dao.PersonDAO;
+import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
-import ru.korotaev.libraryapp.models.User;
+import ru.korotaev.libraryapp.services.AuthorService;
 import ru.korotaev.libraryapp.services.BooksService;
 import ru.korotaev.libraryapp.services.User_BookService;
 import ru.korotaev.libraryapp.util.BooksValidator;
-import ru.korotaev.libraryapp.util.UserValidator;
 
-import java.util.Optional;
+import java.util.List;
 
 @Controller
 @RequestMapping("/books")
 public class BooksController {
 
     private final BooksService booksService;
+    private final AuthorService authorService;
     private final User_BookService userBookService;
     private final BooksValidator booksValidator;
 
     @Autowired
-    public BooksController(BooksService peopleService, User_BookService userBookService, BooksValidator booksValidator, PersonDAO personDAO) {
+    public BooksController(BooksService peopleService, User_BookService userBookService, BooksValidator booksValidator, PersonDAO personDAO, AuthorService authorService) {
         this.booksService = peopleService;
         this.userBookService = userBookService;
         this.booksValidator = booksValidator;
+        this.authorService = authorService;
     }
 
     @GetMapping()
@@ -45,14 +48,19 @@ public class BooksController {
     }
 
     @GetMapping("/new")
-    public String newBook(@ModelAttribute("book") Book book){
+    public String newBook(Model model, @ModelAttribute("book") Book book){
+        List<Author> authors = authorService.findAll();
+        model.addAttribute("authors", authors);
+        model.addAttribute("book", new Book());
         return "books/new";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult){
+    public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, Model model){
         booksValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()){
+            List<Author> authors = authorService.findAll();
+            model.addAttribute("authors", authors);
             return "books/new";
         }
         booksService.save(book);
@@ -67,6 +75,7 @@ public class BooksController {
 
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, @PathVariable("id") int id){
+        book.setBook_id(id);
         booksValidator.validate(book, bindingResult);
         if(bindingResult.hasErrors()){
             return "books/edit";

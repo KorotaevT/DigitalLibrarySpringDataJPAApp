@@ -23,14 +23,17 @@ public class BooksValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return User.class.equals(clazz);
+        return Book.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
         Book book = (Book) target;
-        if (booksService.validateNameAndAuthor(book.getName(), authorService.findOne(book.getBook_id()).getName())!=null && !(booksService.validateNameAndAuthor(book.getName(), authorService.findOne(book.getBook_id()).getName()).equals(book))){
-            errors.rejectValue("nameAndAuthor", "", "Эта книга уже существует");
+        int bookId = book.getBook_id();
+        Book existingBookNameAndAuthor = booksService.validateNameAndAuthor(book.getName(), book.getAuthor_id());
+        if (existingBookNameAndAuthor != null && existingBookNameAndAuthor.getBook_id() != bookId) {
+            errors.rejectValue("name", "", "Эта книга уже существует");
+            errors.rejectValue("author_id", "", "Эта книга уже существует");
         }
     }
 }

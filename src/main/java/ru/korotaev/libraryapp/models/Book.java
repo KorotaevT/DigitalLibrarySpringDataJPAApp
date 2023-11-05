@@ -3,6 +3,7 @@ package ru.korotaev.libraryapp.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -19,8 +20,7 @@ public class Book {
     @Column(name = "name")
     private String name;
 
-    @NotEmpty(message = "Author should not be empty")
-    @Size(max = 255, message = "Enter correct name")
+    @NotNull(message = "Author should not be empty")
     @Column(name = "author_id")
     private int author_id;
 

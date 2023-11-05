@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.services.PeopleService;
 
@@ -25,11 +26,14 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         User user = (User) target;
-        if (peopleService.validateEmail(user.getEmail())!=null && !peopleService.validateEmail(user.getEmail()).equals(user)){
-            errors.rejectValue("email", "", "Эта почта уже занята");
+        int userId = user.getId();
+        User existingUserName = peopleService.validateName(user.getName());
+        User existingUserEmail = peopleService.validateEmail(user.getEmail());
+        if (existingUserName != null && existingUserName.getId() != userId) {
+            errors.rejectValue("name", "", "Этот логин уже существует");
         }
-        if (peopleService.validateName(user.getName())!=null && !peopleService.validateName(user.getName()).equals(user)){
-            errors.rejectValue("name", "", "Этот логин уже занят");
+        if (existingUserEmail != null && existingUserEmail.getId() != userId) {
+            errors.rejectValue("email", "", "Этот email уже существует");
         }
     }
 }

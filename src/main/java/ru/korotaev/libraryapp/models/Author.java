@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "author")
 public class Author {
@@ -51,4 +53,20 @@ public class Author {
     public void setBiography(String biography) {
         this.biography = biography;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Author author = (Author) o;
+
+        return author_id == author.author_id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(author_id);
+    }
+
 }

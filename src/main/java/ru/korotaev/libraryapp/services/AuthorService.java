@@ -46,4 +46,9 @@ public class AuthorService {
     public void delete(int id){
         authorRepository.deleteById(id);
     }
+
+    public Author validateName(String name) {
+        List<Author> authorsWithName = authorRepository.findByName(name);
+        return  authorsWithName.size()==0?null:authorsWithName.get(0);
+    }
 }

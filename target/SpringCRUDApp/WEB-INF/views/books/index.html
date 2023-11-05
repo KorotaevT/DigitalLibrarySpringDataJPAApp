@@ -49,7 +49,7 @@
             border: 1px solid #000;
             padding: 8px;
             text-align: center;
-            width: 33.33%;
+            width: 25%;
         }
 
         .action-label {
@@ -74,12 +74,12 @@
         </thead>
         <tbody th:each="book : ${books}">
         <tr>
-            <td th:text="${book.getBookId()}">ID</td>
-            <td th:text="${book.getBook()}">Название книги</td>
-            <td th:text="${book.getAuthor()}">Автор</td>
+            <td th:text="${book.getBook_id()}">ID</td>
+            <td th:text="${book.getName()}">Название книги</td>
+            <td th:text="${book.getAuthor_id()}">Автор</td>
             <td class="action-label">
-                <a class="btn btn-custom btn-sm" th:href="@{/books/{id}(id=${book.getBookId()})}">Просмотр</a>
-                <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBookId()})}" th:object="${book}" class="d-inline">
+                <a class="btn btn-custom btn-sm" th:href="@{/books/{id}(id=${book.getBook_id()})}">Просмотр</a>
+                <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBook_id()})}" th:object="${book}" class="d-inline">
                     <button class="btn btn-custom btn-sm" type="submit">Удалить</button>
                 </form>
             </td>
