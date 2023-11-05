@@ -24,13 +24,13 @@ public class Book {
     @Column(name = "author_id")
     private int author_id;
 
-    @Column(name = "desription")
-    private String desription;
+    @Column(name = "description")
+    private String description;
 
     public Book(String name, int author_id, String desription) {
         this.name = name;
         this.author_id = author_id;
-        this.desription = desription;
+        this.description = desription;
     }
 
     public Book() {}
@@ -59,11 +59,11 @@ public class Book {
         this.author_id = author_id;
     }
 
-    public String getDesription() {
-        return desription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription;
+    public void setDescription(String desription) {
+        this.description = desription;
     }
 }

@@ -18,18 +18,4 @@ public class PersonDAO {
     public PersonDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
-    @Transactional
-    public List<Book> getBooksByPersonId(int id){
-        Session session = entityManager.unwrap(Session.class);
-
-//        List<Book> bookList = session.createQuery("SELECT b\n" +
-//                        "FROM Book b\n" +
-//                        "JOIN b.users u\n" +
-//                        "WHERE u.id = :userId\n")
-//                .setParameter("personId", id)
-//                .getResultList();
-        return null;
-
-    }
 }

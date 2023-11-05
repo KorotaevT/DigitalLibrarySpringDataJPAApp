@@ -50,4 +50,10 @@ public class PeopleService {
         List<User> peopleWithEmail = peopleRepository.findByEmail(email);
         return  peopleWithEmail.size()==0?null:peopleWithEmail.get(0);
     }
+
+    public User validateName(String name) {
+        List<User> peopleWithName = peopleRepository.findByName(name);
+        return  peopleWithName.size()==0?null:peopleWithName.get(0);
+    }
+
 }

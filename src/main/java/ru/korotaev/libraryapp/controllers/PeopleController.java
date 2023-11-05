@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.korotaev.libraryapp.dao.PersonDAO;
 import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.services.PeopleService;
+import ru.korotaev.libraryapp.services.User_BookService;
 import ru.korotaev.libraryapp.util.UserValidator;
 
 @Controller
@@ -16,13 +17,15 @@ import ru.korotaev.libraryapp.util.UserValidator;
 public class PeopleController {
 
     private final PeopleService peopleService;
+    private final User_BookService userBookService;
     private final UserValidator userValidator;
 
     private final PersonDAO personDAO;
 
     @Autowired
-    public PeopleController(PeopleService peopleService, UserValidator userValidator, PersonDAO personDAO) {
+    public PeopleController(PeopleService peopleService, User_BookService userBookService, UserValidator userValidator, PersonDAO personDAO) {
         this.peopleService = peopleService;
+        this.userBookService = userBookService;
         this.userValidator = userValidator;
         this.personDAO = personDAO;
     }
@@ -36,7 +39,7 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model){
         model.addAttribute("user", peopleService.findOne(id));
-        model.addAttribute("books", personDAO.getBooksByPersonId(id));
+        model.addAttribute("books", userBookService.findBooksByUserId(id));
         return "people/show";
     }
 

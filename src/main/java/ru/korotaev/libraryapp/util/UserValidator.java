@@ -24,9 +24,12 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        User person = (User) target;
-        if (peopleService.validateEmail(person.getEmail())!=null && !peopleService.validateEmail(person.getEmail()).equals(person)){
-            errors.rejectValue("email", "", "This email is already taken");
+        User user = (User) target;
+        if (peopleService.validateEmail(user.getEmail())!=null && !peopleService.validateEmail(user.getEmail()).equals(user)){
+            errors.rejectValue("email", "", "Эта почта уже занята");
+        }
+        if (peopleService.validateName(user.getName())!=null && !peopleService.validateName(user.getName()).equals(user)){
+            errors.rejectValue("name", "", "Этот логин уже занят");
         }
     }
 }

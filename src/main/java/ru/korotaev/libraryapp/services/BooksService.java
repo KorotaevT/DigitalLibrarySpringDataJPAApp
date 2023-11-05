@@ -8,6 +8,7 @@ import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.repositories.BooksRepository;
 import ru.korotaev.libraryapp.repositories.PeopleRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,4 +47,17 @@ public class BooksService {
     public void delete(int id){
         booksRepository.deleteById(id);
     }
+
+    public List<Book> validateNameAndAuthor(String name, String author) {
+        List<Book> bookWithName = booksRepository.findByName(name);
+        List<Book> bookWithAuthor = booksRepository.findByAuthor_id(author);
+        List<Book> booksWithSameNameAndAuthor = new ArrayList<>();
+        booksWithSameNameAndAuthor.addAll(bookWithName);
+        booksWithSameNameAndAuthor.addAll(bookWithAuthor);
+        if (booksWithSameNameAndAuthor.isEmpty()) {
+            return null;
+        }
+        return booksWithSameNameAndAuthor;
+    }
+
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "user_book")
+@IdClass(User_BookId.class)
 public class User_Book {
     @Id
     @Column(name = "user_id")
