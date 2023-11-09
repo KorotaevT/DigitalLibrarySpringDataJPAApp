@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.korotaev.libraryapp.dao.PersonDAO;
 import ru.korotaev.libraryapp.models.User;
-import ru.korotaev.libraryapp.services.PeopleService;
+import ru.korotaev.libraryapp.repositories.services.PeopleService;
 import ru.korotaev.libraryapp.util.UserValidator;
 
 @Controller

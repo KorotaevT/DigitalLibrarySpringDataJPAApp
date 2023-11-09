@@ -5,9 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.korotaev.libraryapp.models.Book;
-import ru.korotaev.libraryapp.models.User;
-import ru.korotaev.libraryapp.services.AuthorService;
-import ru.korotaev.libraryapp.services.BooksService;
+import ru.korotaev.libraryapp.repositories.services.AuthorService;
+import ru.korotaev.libraryapp.repositories.services.BooksService;
 
 @Component
 public class BooksValidator implements Validator {

@@ -1,4 +1,4 @@
-package ru.korotaev.libraryapp.services;
+package ru.korotaev.libraryapp.repositories.services;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;

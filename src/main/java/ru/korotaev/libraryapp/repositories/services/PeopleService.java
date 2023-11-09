@@ -1,4 +1,4 @@
-package ru.korotaev.libraryapp.services;
+package ru.korotaev.libraryapp.repositories.services;
 
 import jakarta.persistence.NoResultException;
 import org.hibernate.Hibernate;

@@ -8,8 +8,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
-import ru.korotaev.libraryapp.services.AuthorService;
-import ru.korotaev.libraryapp.services.BooksService;
+import ru.korotaev.libraryapp.repositories.services.AuthorService;
+import ru.korotaev.libraryapp.repositories.services.BooksService;
 import ru.korotaev.libraryapp.util.AuthorValidator;
 
 @Controller

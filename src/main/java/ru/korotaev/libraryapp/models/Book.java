@@ -1,12 +1,9 @@
 package ru.korotaev.libraryapp.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import ru.korotaev.libraryapp.services.AuthorService;
-import ru.korotaev.libraryapp.repositories.AuthorRepository;
 
 import java.util.List;
 
