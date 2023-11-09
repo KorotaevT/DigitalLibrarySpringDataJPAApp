@@ -1,7 +1,6 @@
 package ru.korotaev.libraryapp.controllers;
 
 import jakarta.validation.Valid;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,7 +70,7 @@ public class AuthorController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("author") @Valid Author author, BindingResult bindingResult, @PathVariable("id") int id){
+    public String update(@ModelAttribute("author") Author author, BindingResult bindingResult, @PathVariable("id") int id){
         author.setAuthor_id(id);
         authorValidator.validate(author, bindingResult);
         if(bindingResult.hasErrors()){

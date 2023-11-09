@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Информация о пользователе</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .bg-beige {
+            background-color: #3CB371;
+        }
+
+        .bg-lightgreen {
+            background-color: #A0522D;
+        }
+
+        .btn-custom {
+            background-color: #A0522D;
+            border-color: #A0522D;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-custom:hover {
+            background-color: #A0522D;
+            border-color: #A0522D;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+            width: 33.33%;
+        }
+
+        .odd-row {
+            background-color: #F5F5F5;
+        }
+
+        .even-row {
+            background-color: #EAEAEA;
+        }
+
+        .edit-form button {
+            margin-right: 10px;
+        }
+
+        .user-info {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .no-books {
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-beige">
+<div class="bg-lightgreen text-white p-3">
+    <h1 class="text-center">Информация о пользователе</h1>
+</div>
+
+<div class="container mt-4">
+    <div class="user-info">
+        <p><strong>Имя:</strong> <span th:text="${user.getName()}">Имя</span></p>
+        <p><strong>Email:</strong> <span th:text="${user.getEmail()}">Value</span></p>
+    </div>
+
+    <hr>
+
+    <div th:if="${books.isEmpty()}" class="no-books">
+        <p>У пользователя сейчас нет книг</p>
+    </div>
+
+    <div th:if="${!books.isEmpty()}">
+        <b>Books:</b>
+        <br>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Описание</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book, iterStat : ${books}" th:class="${iterStat.odd} ? 'odd-row' : 'even-row'">
+                <td th:text="${book.getBook()}"></td>
+                <td th:text="${book.getAuthor()}"></td>
+                <td th:text="${book.getDescription()}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+    </div>
+
+    <div class="d-flex justify-content-between my-2">
+        <a class="btn btn-custom" href="/people">Назад к списку</a>
+        <form th:method="GET" th:action="@{/people/{id}/edit(id=${user.getId()})}" th:object="${user}">
+            <button class="btn btn-custom" type="submit">Изменить</button>
+        </form>
+
+        <form th:method="DELETE" th:action="@{/people/{id}(id=${user.getId()})}" th:object="${user}">
+            <button class="btn btn-custom" type="submit">Удалить</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

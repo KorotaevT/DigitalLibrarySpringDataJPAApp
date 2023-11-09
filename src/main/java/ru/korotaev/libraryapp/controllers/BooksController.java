@@ -1,19 +1,22 @@
 package ru.korotaev.libraryapp.controllers;
 
 import jakarta.validation.Valid;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.korotaev.libraryapp.dao.PersonDAO;
 import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
+import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.services.AuthorService;
 import ru.korotaev.libraryapp.services.BooksService;
+import ru.korotaev.libraryapp.services.PeopleService;
 import ru.korotaev.libraryapp.util.BooksValidator;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -21,13 +24,16 @@ public class BooksController {
 
     private final BooksService booksService;
     private final AuthorService authorService;
+
+    private final PeopleService peopleService;
     private final BooksValidator booksValidator;
 
     @Autowired
-    public BooksController(BooksService peopleService, BooksValidator booksValidator, PersonDAO personDAO, AuthorService authorService) {
+    public BooksController(BooksService peopleService, BooksValidator booksValidator, AuthorService authorService, PeopleService peopleService1) {
         this.booksService = peopleService;
         this.booksValidator = booksValidator;
         this.authorService = authorService;
+        this.peopleService = peopleService1;
     }
 
     @GetMapping()
@@ -39,7 +45,15 @@ public class BooksController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("book") Book book){
         model.addAttribute("book", booksService.findOne(id));
-        model.addAttribute("users", booksService.getAllUsersByBook(id));
+
+        Hibernate.initialize(book.getUsers());
+        Optional<User> bookOwner = Optional.ofNullable(book.getUsers().get(0));
+
+        if(bookOwner.isPresent()){
+            model.addAttribute("owner", bookOwner.get());
+        }else {
+            model.addAttribute("people", peopleService.findAll());
+        }
         return "books/show";
     }
 

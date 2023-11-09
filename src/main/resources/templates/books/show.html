@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Информация о книге</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .bg-beige {
+            background-color: #3CB371;
+        }
+
+        .bg-lightgreen {
+            background-color: #A0522D;
+        }
+
+        .btn-custom {
+            background-color: #A0522D;
+            border-color: #A0522D;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-custom:hover {
+            background-color: #A0522D;
+            border-color: #A0522D;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+            width: 33.33%;
+        }
+
+        .odd-row {
+            background-color: #F5F5F5;
+        }
+
+        .even-row {
+            background-color: #EAEAEA;
+        }
+
+        .user-info {
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-beige">
+<div class="bg-lightgreen text-white p-3">
+    <h1 class="text-center">Информация о книге</h1>
+</div>
+
+<div class="container mt-4">
+    <div class="user-info">
+        <p><strong>Название книги:</strong> <span th:text="${book.getName()}">Название</span></p>
+        <p><strong>Автор:</strong> <span th:text="${book.getAuthor().getName()}">Автор</span></p>
+        <p><strong>Описание:</strong> <span th:text="${book.getDescription()}">Описание</span></p>
+    </div>
+
+    <hr>
+
+    <div th:if="${owner}">
+        <span><strong>Book owner: </strong></span> <span th:text="${owner.getName() + ' ' + owner.getSurname() + ' ' + owner.getPatronymic()}">Person name</span>
+
+        <form th:method="PATCH" th:action="@{/books/{isbn}/release(isbn = ${book.getIsbn()})}">
+            <div class="edit-form">
+                <input type="submit" value="Free the book"/>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${people}">
+        <span>This way the book is free. Release?</span>
+        <form th:method="PATCH" th:action="@{/books/{isbn}/assign(isbn = ${book.getIsbn()})}" th:object="${book}">
+            <label for="person">Select person</label>
+            <select th:object="${person}" th:field="*{id}" id="person">
+                <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName() + ' ' + person.getSurname() + ' ' + person.getPatronymic()}"></option>
+            </select>
+            <div class="edit-form">
+                <input type="submit" value="Assign a book"/>
+            </div>
+        </form>
+    </div>
+
+    <div class="d-flex justify-content-between my-2">
+        <a class="btn btn-custom" href="/books">Назад к списку книг</a>
+        <form th:method="GET" th:action="@{/books/{id}/edit(id=${book.getBook_id()})}" th:object="${book}">
+            <button class="btn btn-custom" type="submit">Изменить</button>
+        </form>
+
+        <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBook_id()})}" th:object="${book}">
+            <button class="btn btn-custom" type="submit">Удалить</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

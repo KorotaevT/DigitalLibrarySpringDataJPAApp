@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
-import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.repositories.AuthorRepository;
-import ru.korotaev.libraryapp.repositories.PeopleRepository;
 
 import java.util.List;
 import java.util.Optional;

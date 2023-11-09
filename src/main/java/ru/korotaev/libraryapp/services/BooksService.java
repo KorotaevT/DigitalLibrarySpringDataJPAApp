@@ -4,17 +4,13 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
 import ru.korotaev.libraryapp.models.User;
-import ru.korotaev.libraryapp.repositories.AuthorRepository;
 import ru.korotaev.libraryapp.repositories.BooksRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
