@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +23,9 @@ public class Author {
 
     @Column(name = "biography")
     private String biography;
+
+    @OneToMany(mappedBy = "author")
+    private List<Book> books;
 
     public Author(String name, String biography) {
         this.name = name;
@@ -52,6 +56,14 @@ public class Author {
 
     public void setBiography(String biography) {
         this.biography = biography;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     @Override

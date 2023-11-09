@@ -76,7 +76,7 @@
         <tr>
             <td th:text="${book.getBook_id()}">ID</td>
             <td th:text="${book.getName()}">Название книги</td>
-            <td th:text="${book.getAuthor_id()}">Автор</td>
+            <td th:text="${book.getAuthor.getName()}">Автор</td>
             <td class="action-label">
                 <a class="btn btn-custom btn-sm" th:href="@{/books/{id}(id=${book.getBook_id()})}">Просмотр</a>
                 <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBook_id()})}" th:object="${book}" class="d-inline">

@@ -1,12 +1,15 @@
 package ru.korotaev.libraryapp.services;
 
 import jakarta.persistence.NoResultException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.korotaev.libraryapp.models.Book;
 import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.repositories.PeopleRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +57,15 @@ public class PeopleService {
     public User validateName(String name) {
         List<User> peopleWithName = peopleRepository.findByName(name);
         return  peopleWithName.size()==0?null:peopleWithName.get(0);
+    }
+
+    public List<Book> getAllBooksByUser(int userId) {
+        User user = peopleRepository.findById(userId).orElse(null);
+        if (user != null) {
+            Hibernate.initialize(user.getBooks());
+            return user.getBooks();
+        }
+        return Collections.emptyList();
     }
 
 }

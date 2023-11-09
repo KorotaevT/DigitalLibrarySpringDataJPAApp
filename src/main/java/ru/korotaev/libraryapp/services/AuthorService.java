@@ -1,9 +1,11 @@
 package ru.korotaev.libraryapp.services;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korotaev.libraryapp.models.Author;
+import ru.korotaev.libraryapp.models.Book;
 import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.repositories.AuthorRepository;
 import ru.korotaev.libraryapp.repositories.PeopleRepository;
@@ -50,5 +52,15 @@ public class AuthorService {
     public Author validateName(String name) {
         List<Author> authorsWithName = authorRepository.findByName(name);
         return  authorsWithName.size()==0?null:authorsWithName.get(0);
+    }
+
+    @Transactional
+    public List<Book> getAuthorBooks(int authorId) {
+        Author author = authorRepository.findById(authorId).orElse(null);
+        if (author != null) {
+            Hibernate.initialize(author.getBooks());
+            return author.getBooks();
+        }
+        return null;
     }
 }

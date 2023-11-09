@@ -2,6 +2,7 @@ package ru.korotaev.libraryapp.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -18,24 +19,24 @@ public class Bookmark {
     @Column(name = "name")
     private String name;
 
-    @NotEmpty(message = "User id should not be empty")
-    @Column(name = "user_id")
-    private int user_id;
-
-    @NotEmpty(message = "Book id should not be empty")
-    @Column(name = "book_id")
-    private int book_id;
-
     @NotEmpty(message = "Page should not be empty")
     @Column(name = "page")
     private int page;
     @Column(name = "desription")
     private String desription;
 
-    public Bookmark(String name, int user_id, int book_id, int page, String desription) {
+    @ManyToOne
+    @JoinColumn(name = "book_id", referencedColumnName = "book_id")
+    @NotNull(message = "Book should not be empty")
+    private Book book;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @NotNull(message = "User should not be empty")
+    private User user;
+
+    public Bookmark(String name, int page, String desription) {
         this.name = name;
-        this.user_id = user_id;
-        this.book_id = book_id;
         this.page = page;
         this.desription = desription;
     }
@@ -58,22 +59,6 @@ public class Bookmark {
         this.name = name;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public int getBook_id() {
-        return book_id;
-    }
-
-    public void setBook_id(int book_id) {
-        this.book_id = book_id;
-    }
-
     public int getPage() {
         return page;
     }
@@ -88,5 +73,21 @@ public class Bookmark {
 
     public void setDesription(String desription) {
         this.desription = desription;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

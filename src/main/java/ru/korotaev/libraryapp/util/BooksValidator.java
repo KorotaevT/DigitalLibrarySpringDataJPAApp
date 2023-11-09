@@ -30,10 +30,10 @@ public class BooksValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Book book = (Book) target;
         int bookId = book.getBook_id();
-        Book existingBookNameAndAuthor = booksService.validateNameAndAuthor(book.getName(), book.getAuthor_id());
+        Book existingBookNameAndAuthor = booksService.validateNameAndAuthor(book);
         if (existingBookNameAndAuthor != null && existingBookNameAndAuthor.getBook_id() != bookId) {
             errors.rejectValue("name", "", "Эта книга уже существует");
-            errors.rejectValue("author_id", "", "Эта книга уже существует");
+            errors.rejectValue("author", "", "Эта книга уже существует");
         }
     }
 }

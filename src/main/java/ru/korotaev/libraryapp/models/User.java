@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
+
 @Entity
 @Table(name = "\"user\"")
 public class User {
@@ -22,6 +25,17 @@ public class User {
     @Email(message = "Email should be valid")
     @Column(name = "email")
     private String email;
+
+    @ManyToMany
+    @JoinTable(
+            name = "User_Book",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<Bookmark> bookmarks;
 
     public User(String name, String email) {
         this.name = name;
@@ -50,5 +64,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    public List<Bookmark> getBookmarks() {
+        return bookmarks;
+    }
+
+    public void setBookmarks(List<Bookmark> bookmarks) {
+        this.bookmarks = bookmarks;
     }
 }

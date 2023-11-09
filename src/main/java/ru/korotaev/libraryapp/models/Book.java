@@ -5,6 +5,10 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import ru.korotaev.libraryapp.services.AuthorService;
+import ru.korotaev.libraryapp.repositories.AuthorRepository;
+
+import java.util.List;
 
 @Entity
 @Table(name = "book")
@@ -20,16 +24,23 @@ public class Book {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     @NotNull(message = "Author should not be empty")
-    @Column(name = "author_id")
-    private int author_id;
+    private Author author;
+
+    @OneToMany(mappedBy = "book")
+    private List<Bookmark> bookmarks;
 
     @Column(name = "description")
     private String description;
 
-    public Book(String name, int author_id, String desription) {
+    @ManyToMany(mappedBy = "books")
+    private List<User> users;
+
+    public Book(String name, Author author, String desription) {
         this.name = name;
-        this.author_id = author_id;
+        this.author = author;
         this.description = desription;
     }
 
@@ -51,12 +62,12 @@ public class Book {
         this.name = name;
     }
 
-    public int getAuthor_id() {
-        return author_id;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthor_id(int author_id) {
-        this.author_id = author_id;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public String getDescription() {
@@ -66,4 +77,21 @@ public class Book {
     public void setDescription(String desription) {
         this.description = desription;
     }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<Bookmark> getBookmarks() {
+        return bookmarks;
+    }
+
+    public void setBookmarks(List<Bookmark> bookmarks) {
+        this.bookmarks = bookmarks;
+    }
+
 }

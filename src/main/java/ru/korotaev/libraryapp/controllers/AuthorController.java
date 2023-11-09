@@ -1,12 +1,14 @@
 package ru.korotaev.libraryapp.controllers;
 
 import jakarta.validation.Valid;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.korotaev.libraryapp.models.Author;
+import ru.korotaev.libraryapp.models.Book;
 import ru.korotaev.libraryapp.services.AuthorService;
 import ru.korotaev.libraryapp.services.BooksService;
 import ru.korotaev.libraryapp.util.AuthorValidator;
@@ -36,13 +38,20 @@ public class AuthorController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model){
         model.addAttribute("author", authorService.findOne(id));
-        model.addAttribute("books", booksService.findByAuthorId(id));
+        model.addAttribute("books", authorService.getAuthorBooks(id));
         return "authors/show";
     }
 
     @GetMapping("/new")
     public String newAuthor(@ModelAttribute("author") Author author){
         return "authors/new";
+    }
+
+    @GetMapping("/{id}/new")
+    public String newBookWithAuthor(@PathVariable("id") int id, Model model, @ModelAttribute("book") Book book){
+        model.addAttribute("author", authorService.findOne(id));
+        model.addAttribute("book", new Book());
+        return "books/newWithAuthor";
     }
 
     @PostMapping()

@@ -79,10 +79,6 @@
         <input type="text" th:field="*{biography}" id="biography"/>
         <div class="error-message" th:if="${#fields.hasErrors('biography')}" th:errors="*{biography}">Ошибка в биографии</div>
 
-        <label for="author_id">Введите author_id автора:</label>
-        <input type="text" th:field="*{author_id}" id="author_id"/>
-        <div class="error-message" th:if="${#fields.hasErrors('author_id')}" th:errors="*{author_id}">Ошибка в биографии</div>
-
         <br/>
         <div class="d-flex justify-content-between my-2">
             <a class="btn btn-custom" href="/authors">Назад к списку</a>
