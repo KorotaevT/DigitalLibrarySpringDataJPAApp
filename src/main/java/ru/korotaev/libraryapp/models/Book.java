@@ -35,10 +35,10 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     private List<User> users;
 
-    public Book(String name, Author author, String desription) {
+    public Book(String name, Author author, String description) {
         this.name = name;
         this.author = author;
-        this.description = desription;
+        this.description = description;
     }
 
     public Book() {}
@@ -71,8 +71,8 @@ public class Book {
         return description;
     }
 
-    public void setDescription(String desription) {
-        this.description = desription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<User> getUsers() {

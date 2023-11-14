@@ -2,6 +2,9 @@ package ru.korotaev.libraryapp.repositories.services;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korotaev.libraryapp.models.Book;
@@ -27,6 +30,14 @@ public class BooksService {
 
     public List<Book> findAll(){
         return booksRepository.findAll();
+    }
+
+    public Page<Book> findAll(Pageable pageable) {
+        return booksRepository.findAll(pageable);
+    }
+
+    public List<Book> findAll(Sort sort) {
+        return booksRepository.findAll(sort);
     }
 
     public Book findOne(int id){

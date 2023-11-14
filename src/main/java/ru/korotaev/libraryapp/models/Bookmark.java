@@ -22,8 +22,8 @@ public class Bookmark {
     @NotEmpty(message = "Page should not be empty")
     @Column(name = "page")
     private int page;
-    @Column(name = "desription")
-    private String desription;
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "book_id")
@@ -35,10 +35,10 @@ public class Bookmark {
     @NotNull(message = "User should not be empty")
     private User user;
 
-    public Bookmark(String name, int page, String desription) {
+    public Bookmark(String name, int page, String description) {
         this.name = name;
         this.page = page;
-        this.desription = desription;
+        this.description = description;
     }
 
     public Bookmark() {}
@@ -67,12 +67,12 @@ public class Bookmark {
         this.page = page;
     }
 
-    public String getDesription() {
-        return desription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Book getBook() {

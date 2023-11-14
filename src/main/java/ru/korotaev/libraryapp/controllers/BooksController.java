@@ -3,10 +3,14 @@ package ru.korotaev.libraryapp.controllers;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.korotaev.libraryapp.dao.CalculatePageNumbers;
 import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
 import ru.korotaev.libraryapp.models.User;
@@ -15,8 +19,11 @@ import ru.korotaev.libraryapp.repositories.services.BooksService;
 import ru.korotaev.libraryapp.repositories.services.PeopleService;
 import ru.korotaev.libraryapp.util.BooksValidator;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/books")
@@ -37,18 +44,26 @@ public class BooksController {
     }
 
     @GetMapping()
-    public String index(Model model){
-        model.addAttribute("books", booksService.findAll());
+    public String index(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        int pageSize = 10;
+        Page<Book> bookPage = booksService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+        List<Integer> pageNumbers = CalculatePageNumbers.calculatePageNumbers(page, bookPage.getTotalPages());
+        model.addAttribute("books", bookPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", bookPage.getTotalPages());
+        model.addAttribute("pageNumbers", pageNumbers);
+
         return "books/index";
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model, @ModelAttribute("book") Book book){
-        model.addAttribute("book", booksService.findOne(id));
-
+    public String show(@PathVariable("id") int id, Model model){
+        Book book = booksService.findOne(id);
         Hibernate.initialize(book.getUsers());
-        Optional<User> bookOwner = Optional.ofNullable(book.getUsers().get(0));
-
+        Optional<User> bookOwner = Optional.ofNullable(book.getUsers())
+                .map(users -> users.stream().findAny())
+                .orElse(null);
+        model.addAttribute("book", book);
         if(bookOwner.isPresent()){
             model.addAttribute("owner", bookOwner.get());
         }else {
@@ -78,7 +93,10 @@ public class BooksController {
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id){
-        model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("authors", authorService.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Author::getName))
+                .collect(Collectors.toList()));
         model.addAttribute("book", booksService.findOne(id));
         return "books/edit";
     }
