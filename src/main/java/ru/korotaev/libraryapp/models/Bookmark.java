@@ -19,7 +19,7 @@ public class Bookmark {
     @Column(name = "name")
     private String name;
 
-    @NotEmpty(message = "Page should not be empty")
+    @NotNull(message = "Page should not be empty")
     @Column(name = "page")
     private int page;
     @Column(name = "description")

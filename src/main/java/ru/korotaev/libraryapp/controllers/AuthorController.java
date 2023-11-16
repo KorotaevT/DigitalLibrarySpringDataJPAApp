@@ -2,12 +2,18 @@ package ru.korotaev.libraryapp.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.korotaev.libraryapp.dao.CalculatePageNumbers;
 import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
+import ru.korotaev.libraryapp.models.Bookmark;
+import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.repositories.services.AuthorService;
 import ru.korotaev.libraryapp.repositories.services.BooksService;
 import ru.korotaev.libraryapp.util.AuthorValidator;
@@ -37,11 +43,16 @@ public class AuthorController {
     }
 
     @GetMapping()
-    public String index(Model model){
-        model.addAttribute("authors", authorService.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Author::getName))
-                .collect(Collectors.toList()));
+    public String index(@RequestParam(name = "page", defaultValue = "0") int page, Model model){
+        int pageSize = 10;
+        Page<Author> authorPage = authorService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+        int authorsCount = authorService.findAll().size();
+        List<Integer> pageNumbers = CalculatePageNumbers.calculatePageNumbers(page, authorPage.getTotalPages());
+        model.addAttribute("authors", authorPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("authorsCount", authorsCount);
+        model.addAttribute("totalPages", authorPage.getTotalPages());
+        model.addAttribute("pageNumbers", pageNumbers);
         return "authors/index";
     }
 
@@ -49,6 +60,7 @@ public class AuthorController {
     public String show(@PathVariable("id") int id, Model model){
         model.addAttribute("author", authorService.findOne(id));
         model.addAttribute("books", authorService.getAuthorBooks(id));
+        model.addAttribute("deleteBook", new Book());
         return "authors/show";
     }
 
@@ -109,30 +121,9 @@ public class AuthorController {
         return "redirect:/authors/" + id;
     }
 
-    @GetMapping("/{id}/bookEdit/{bookId}")
-    public String editBook(Model model, @PathVariable("id") int id, @PathVariable("bookId") int bookId){
-        model.addAttribute("authors", authorService.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Author::getName))
-                .collect(Collectors.toList()));
-        model.addAttribute("book", booksService.findOne(id));
-        return "books/edit";
-    }
-
-    @PatchMapping("/{id}/bookUpdate")
-    public String updateBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, @PathVariable("id") int id){
-        book.setBook_id(id);
-        booksValidator.validate(book, bindingResult);
-        if(bindingResult.hasErrors()){
-            return "books/edit";
-        }
-        booksService.update(id, book);
-        return "redirect:/books";
-    }
-
-    @DeleteMapping("/{id}/bookDelete")
-    public String deleteBook(@PathVariable("id") int id){
-        booksService.delete(id);
-        return "redirect:/books";
+    @PostMapping("/{id}/deleteBook")
+    public String deleteBook(@PathVariable("id") int id, @ModelAttribute("deleteBook") Book deleteBook, Model model){
+        booksService.delete(deleteBook.getBook_id());
+        return "redirect:/authors/" + id;
     }
 }

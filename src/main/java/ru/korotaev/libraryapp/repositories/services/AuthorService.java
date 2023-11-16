@@ -2,10 +2,14 @@ package ru.korotaev.libraryapp.repositories.services;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korotaev.libraryapp.models.Author;
 import ru.korotaev.libraryapp.models.Book;
+import ru.korotaev.libraryapp.models.User;
 import ru.korotaev.libraryapp.repositories.AuthorRepository;
 
 import java.util.List;
@@ -29,6 +33,14 @@ public class AuthorService {
     public Author findOne(int id){
         Optional<Author> foundAuthor =  authorRepository.findById(id);
         return foundAuthor.orElse(null);
+    }
+
+    public Page<Author> findAll(Pageable pageable) {
+        return authorRepository.findAll(pageable);
+    }
+
+    public List<Author> findAll(Sort sort) {
+        return authorRepository.findAll(sort);
     }
 
     @Transactional

@@ -61,7 +61,7 @@
             text-align: center;
         }
         .form-container {
-            text-align: center; /* Центрирует внутренний текст и элементы формы */
+            text-align: center;
         }
     </style>
 </head>
@@ -80,6 +80,7 @@
 
     <div th:if="${books.isEmpty()}" class="no-books">
         <p>У клиента сейчас нет книг</p>
+        <hr>
     </div>
 
     <div th:if="${!books.isEmpty()}">

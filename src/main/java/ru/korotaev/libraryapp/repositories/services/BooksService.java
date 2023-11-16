@@ -8,10 +8,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korotaev.libraryapp.models.Book;
+import ru.korotaev.libraryapp.models.Bookmark;
 import ru.korotaev.libraryapp.models.User;
+import ru.korotaev.libraryapp.repositories.BookmarkRepository;
 import ru.korotaev.libraryapp.repositories.BooksRepository;
+import ru.korotaev.libraryapp.repositories.PeopleRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +22,17 @@ import java.util.Optional;
 public class BooksService {
 
     private final BooksRepository booksRepository;
+
+    private final PeopleRepository peopleRepository;
+
+    private final BookmarkRepository bookmarkRepository;
     private final AuthorService authorService;
 
     @Autowired
-    public BooksService(BooksRepository booksRepository, AuthorService authorService) {
+    public BooksService(BooksRepository booksRepository, PeopleRepository peopleRepository, BookmarkRepository bookmarkRepository, AuthorService authorService) {
         this.booksRepository = booksRepository;
+        this.peopleRepository = peopleRepository;
+        this.bookmarkRepository = bookmarkRepository;
         this.authorService = authorService;
     }
 
@@ -71,13 +79,56 @@ public class BooksService {
                 .orElse(null);
     }
 
-    public List<User> getAllUsersByBook(int bookId) {
-        Book book = booksRepository.findById(bookId).orElse(null);
-        if (book != null) {
-            Hibernate.initialize(book.getUsers());
-            return book.getUsers();
+    @Transactional
+    public void addUserToBook(int bookId, User newUser) {
+        Book book = booksRepository.findById(bookId).orElseThrow();
+        User savedUser = peopleRepository.findById(newUser.getId()).orElseThrow();
+        Hibernate.initialize(book.getUsers());
+        Hibernate.initialize(savedUser.getBooks());
+        if(!book.getUsers().contains(savedUser)) {
+            book.getUsers().add(savedUser);
+            savedUser.getBooks().add(book);
+
+            booksRepository.save(book);
+            peopleRepository.save(savedUser);
         }
-        return Collections.emptyList();
+    }
+
+    @Transactional
+    public void deleteUserFromBook(int bookId, User unpinUser) {
+        Book book = booksRepository.findById(bookId).orElseThrow();
+        User savedUser = peopleRepository.findById(unpinUser.getId()).orElseThrow();
+        Hibernate.initialize(book.getUsers());
+        Hibernate.initialize(savedUser.getBooks());
+        if(book.getUsers().contains(savedUser)) {
+            book.getUsers().remove(savedUser);
+            savedUser.getBooks().remove(book);
+            booksRepository.save(book);
+            peopleRepository.save(savedUser);
+        }
+    }
+
+    @Transactional
+    public void addBookmarkToBook(int bookId, Bookmark newBookmark) {
+        Book book = booksRepository.findById(bookId).orElseThrow();
+        if(!book.getBookmarks().contains(newBookmark)) {
+            book.getBookmarks().add(newBookmark);
+            newBookmark.setBook(book);;
+
+            booksRepository.save(book);
+            bookmarkRepository.save(newBookmark);
+        }
+    }
+
+    @Transactional
+    public void deleteBookmarkFromBook(int bookId, Bookmark deleteBookmark) {
+        Book book = booksRepository.findById(bookId).orElseThrow();
+        Bookmark savedBookmark = bookmarkRepository.findById(deleteBookmark.getBookmark_id()).orElseThrow();
+        if(book.getBookmarks().contains(savedBookmark)) {
+            book.getBookmarks().remove(savedBookmark);
+            booksRepository.save(book);
+            bookmarkRepository.deleteById(savedBookmark.getBookmark_id());
+        }
     }
 
 }

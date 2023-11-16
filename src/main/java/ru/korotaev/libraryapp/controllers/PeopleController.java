@@ -43,6 +43,8 @@ public class PeopleController {
         int pageSize = 10;
         Page<User> userPage = peopleService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
         List<Integer> pageNumbers = CalculatePageNumbers.calculatePageNumbers(page, userPage.getTotalPages());
+        int peopleCount = peopleService.findAll().size();
+        model.addAttribute("peopleCount", peopleCount);
         model.addAttribute("people", userPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());

@@ -104,10 +104,12 @@
                 <td th:text="${book.getName()}"></td>
                 <td th:text="${book.getDescription()}"></td>
                 <td>
-                    <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBook_id()})}" th:object="${book}">
-                        <button class="btn btn-custom" type="submit">Удалить</button>
+                    <form th:method="POST" th:action="@{/authors/{id}/deleteBook(id=${author.getAuthor_id()})}" class="form-container" th:object="${deleteBook}">
+                        <input type="hidden" th:name="book_id" th:value="${book.getBook_id()}">
+                        <input type="submit" class="btn btn-custom" value="Удалить">
                         <a class="btn btn-custom" th:href="@{/books/{id}/edit(id=${book.getBook_id()})}">Изменить</a>
                     </form>
+
                 </td>
             </tr>
             </tbody>

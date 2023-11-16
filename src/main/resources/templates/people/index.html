@@ -86,6 +86,11 @@
 </div>
 
 <div class="container mt-4">
+
+    <div class="mb-3">
+        <p><strong>Количество клиентов: </strong><span th:text="${peopleCount}"></span></p>
+    </div>
+
     <table class="table">
         <thead>
         <tr>
@@ -163,6 +168,7 @@
     <hr class="my-4">
     <div class="d-flex justify-content-between my-2">
     <a class="btn btn-custom2" href="/">Назад в меню</a>
+        <a class="btn btn-custom2" href="/search">Поиск</a>
     <a class="btn btn-custom2" href="/people/new">Добавить клиента</a>
     </div>
 </div>
