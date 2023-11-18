@@ -19,4 +19,10 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     Page<Author> findAll(Pageable pageable);
 
     List<Author> findAll(Sort sort);
+
+    List<Author> findByNameContaining(String search);
+
+    Page<Author> findByNameContainingIgnoreCaseOrBiographyContainingIgnoreCase(String name, String authorName, Pageable pageable);
+
+    List<Author> findByNameContainingIgnoreCaseOrBiographyContainingIgnoreCase(String name, String authorName);
 }

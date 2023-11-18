@@ -79,7 +79,7 @@
 </div>
 
 <div class="container">
-    <form th:method="POST" th:action="@{/authors}" th:object="${author}">
+    <form th:method="POST" th:action="@{/authors}" th:object="${author}" autocomplete="off">
         <label for="name">Введите имя автора:</label>
         <input type="text" th:field="*{name}" id="name"/>
         <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка в имени автора</div>

@@ -15,8 +15,8 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int author_id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(max = 255, message = "Enter correct name")
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(max = 255, message = "Введите корректное имя")
     @Column(name = "name")
     private String name;
 

@@ -46,19 +46,33 @@ public class BooksController {
     }
 
     @GetMapping()
-    public String index(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String index(@RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "search", required = false) String search,
+                        Model model) {
+
         int pageSize = 10;
-        Page<Book> bookPage = booksService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+        Page<Book> bookPage;
+        int booksCount = 0;
+        if (search != null && !search.isEmpty()) {
+            bookPage = booksService.searchBooks(search, PageRequest.of(page, pageSize, Sort.by("name")));
+            booksCount = booksService.searchBooks(search).size();
+        } else {
+            bookPage = booksService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+            booksCount = booksService.findAll().size();
+        }
+
         List<Integer> pageNumbers = CalculatePageNumbers.calculatePageNumbers(page, bookPage.getTotalPages());
-        int booksCount = booksService.findAll().size();
         model.addAttribute("booksCount", booksCount);
         model.addAttribute("books", bookPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", bookPage.getTotalPages());
         model.addAttribute("pageNumbers", pageNumbers);
+        model.addAttribute("searchParam", search);
 
         return "books/index";
     }
+
+
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model){
@@ -93,7 +107,8 @@ public class BooksController {
             return "books/new";
         }
         booksService.save(book);
-        return "redirect:/books";
+
+        return "redirect:/books/" + book.getBook_id();
     }
 
     @PostMapping("/{id}/addUser")
@@ -109,7 +124,22 @@ public class BooksController {
     }
 
     @PostMapping("/{id}/addBookmark")
-    public String addBookmarkToBook(@PathVariable("id") int id, @ModelAttribute("newBookmark") Bookmark newBookmark) {
+    public String addBookmarkToBook(@PathVariable("id") int id, @ModelAttribute("newBookmark") @Valid Bookmark newBookmark, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()){
+            Book book = booksService.findOne(id);
+            Hibernate.initialize(book.getUsers());
+            Hibernate.initialize(book.getBookmarks());
+            List<User> bookUsers = book.getUsers();
+            List<Bookmark> bookmarks = book.getBookmarks();
+            model.addAttribute("book", book);
+            model.addAttribute("users", bookUsers);
+            model.addAttribute("bookmarks", bookmarks);
+            model.addAttribute("allUsers", peopleService.findAll(Sort.by("name")));
+            model.addAttribute("newUser", new User());
+            model.addAttribute("newBookmark", new Bookmark());
+            model.addAttribute("deleteBookmark", new Bookmark());
+            return "books/show";
+        }
         booksService.addBookmarkToBook(id, newBookmark);
         return "redirect:/books/" + id;
     }

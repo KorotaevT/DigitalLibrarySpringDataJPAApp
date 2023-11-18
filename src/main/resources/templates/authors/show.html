@@ -126,7 +126,7 @@
         <form th:method="DELETE" th:action="@{/authors/{id}(id=${author.getAuthor_id()})}" th:object="${author}">
             <button class="btn btn-custom" type="submit">Удалить автора</button>
         </form>
-        <form th:method="GET" th:action="@{/authors/{id}/new(id=${author.getAuthor_id()})}">
+        <form th:method="GET" th:action="@{/authors/{id}/newBook(id=${author.getAuthor_id()})}">
             <button class="btn btn-custom" type="submit">Добавить книгу</button>
         </form>
     </div>

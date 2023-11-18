@@ -16,14 +16,14 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int book_id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(max = 255, message = "Enter correct name")
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(max = 255, message = "Введите корректное имя")
     @Column(name = "name")
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @NotNull(message = "Author should not be empty")
+    @NotNull(message = "Автор не должно быть пустым")
     private Author author;
 
     @OneToMany(mappedBy = "book")

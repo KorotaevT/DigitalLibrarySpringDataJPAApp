@@ -46,5 +46,4 @@ public class BookmarkService {
     public void delete(int id){
         bookmarkRepository.deleteById(id);
     }
-
 }

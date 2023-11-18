@@ -131,4 +131,12 @@ public class BooksService {
         }
     }
 
+    public Page<Book> searchBooks(String query, Pageable pageable) {
+        return booksRepository.findByNameContainingIgnoreCaseOrAuthorNameContainingIgnoreCase(query, query, pageable);
+    }
+
+    public List<Book> searchBooks(String query) {
+        return booksRepository.findByNameContainingIgnoreCaseOrAuthorNameContainingIgnoreCase(query, query);
+    }
+
 }

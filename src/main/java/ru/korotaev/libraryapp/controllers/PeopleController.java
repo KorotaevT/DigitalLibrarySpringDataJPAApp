@@ -1,5 +1,6 @@
 package ru.korotaev.libraryapp.controllers;
 
+;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +40,27 @@ public class PeopleController {
     }
 
     @GetMapping()
-    public String index(@RequestParam(name = "page", defaultValue = "0") int page, Model model){
+    public String index(@RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "search", required = false) String search,
+                        Model model) {
+
         int pageSize = 10;
-        Page<User> userPage = peopleService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+        Page<User> userPage;
+        int peopleCount = 0;
+        if (search != null && !search.isEmpty()) {
+            userPage = peopleService.searchUsers(search, PageRequest.of(page, pageSize, Sort.by("name")));
+            peopleCount = peopleService.searchUsers(search).size();
+        } else {
+            userPage = peopleService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+            peopleCount = peopleService.findAll().size();
+        }
         List<Integer> pageNumbers = CalculatePageNumbers.calculatePageNumbers(page, userPage.getTotalPages());
-        int peopleCount = peopleService.findAll().size();
         model.addAttribute("peopleCount", peopleCount);
         model.addAttribute("people", userPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
         model.addAttribute("pageNumbers", pageNumbers);
+        model.addAttribute("searchParam", search);
         return "people/index";
     }
 

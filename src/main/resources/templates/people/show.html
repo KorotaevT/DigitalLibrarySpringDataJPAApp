@@ -111,7 +111,7 @@
         <hr>
     </div>
 
-    <form th:method="POST" th:action="@{/people/{id}/addBook(id=${user.getId()})}" class="form-container" th:object="${newBook}">
+    <form th:method="POST" th:action="@{/people/{id}/addBook(id=${user.getId()})}" class="form-container" th:object="${newBook}" autocomplete="off">
         <br>
         <select th:field="*{book_id}">
             <option th:if="${allBooks}" th:each="book : ${allBooks}" th:value="${book.getBook_id()}" th:text="${book.name}"></option>

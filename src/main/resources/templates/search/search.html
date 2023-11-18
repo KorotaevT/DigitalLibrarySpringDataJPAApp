@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Поиск по таблицам</title>
-    <!-- Подключение Bootstrap CSS -->
+    <title>Поиск</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
     <style>
@@ -49,46 +48,208 @@
             border: 1px solid #000;
             padding: 8px;
             text-align: center;
-            width: 33.33%;
+            width: 25%;
         }
 
         .action-label {
             text-align: center;
         }
+
+        .pagination .page-item .page-link {
+            background-color: #8B4513;
+            border-color: #8B4513;
+            color: white;
+        }
+
+        .pagination .page-item .page-link:hover {
+            color: black;
+            border-color: #A0522D;
+        }
+
+        .pagination .page-item.active .page-link{
+            background-color: #8B4513;
+            border-color: #8B4513;
+            color: #3CB371;
+        }
+
+        .pagination .page-item.active .page-link:hover {
+            background-color: #8B4513;
+            border-color: #8B4513;
+            color: black;
+        }
     </style>
 </head>
 <body class="bg-beige">
 <div class="bg-lightgreen text-white p-3">
-    <h1 class="text-center">Поиск по таблицам</h1>
+    <h1 class="text-center">Поиск</h1>
 </div>
 
 <div class="container mt-4">
-    <form action="/search" method="get" class="form-inline d-flex justify-content-center align-items-center">
-        <label class="mr-2">Выберите таблицу:</label>
-        <select class="form-control mr-2" name="table">
-            <option value="authors">Таблица авторов</option>
-            <!-- Добавьте другие таблицы по необходимости -->
-        </select>
-
-        <label class="mr-2">Выберите поле:</label>
-        <select class="form-control mr-2" name="field">
-            <option value="name">Имя автора</option>
-            <option value="id">ID</option>
-            <!-- Добавьте другие поля по необходимости -->
-        </select>
-
-        <label class="mr-2">Введите значение:</label>
-        <input type="text" class="form-control mr-2" name="value" required>
-
-        <button type="submit" class="btn btn-custom2">Поиск</button>
+    <form id="searchForm">
+        <table class="table table-fields">
+            <thead>
+            <tr>
+                <th>Таблицы</th>
+                <th>Поля</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" id="clientTableCheckbox" name="clientTable" value="clientTable" checked>
+                    <label for="clientTableCheckbox">Клиенты</label>
+                </td>
+                <td>
+                    <input type="checkbox" id="clientIdCheckbox" name="clientId" value="clientId" checked>
+                    <label for="clientIdCheckbox">id</label>,
+                    <input type="checkbox" id="clientNameCheckbox" name="clientName" value="clientName" checked>
+                    <label for="clientNameCheckbox">имя</label>,
+                    <input type="checkbox" id="clientEmailCheckbox" name="clientEmail" value="clientEmail" checked>
+                    <label for="clientEmailCheckbox">email</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" id="authorTableCheckbox" name="authorTable" value="authorTable" checked>
+                    <label for="authorTableCheckbox">Авторы</label>
+                </td>
+                <td>
+                    <input type="checkbox" id="authorIdCheckbox" name="authorId" value="authorId" checked>
+                    <label for="authorIdCheckbox">id</label>,
+                    <input type="checkbox" id="authorNameCheckbox" name="authorName" value="authorName" checked>
+                    <label for="authorNameCheckbox">имя</label>,
+                    <input type="checkbox" id="authorBioCheckbox" name="authorBio" value="authorBio" checked>
+                    <label for="authorBioCheckbox">биография</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" id="bookTableCheckbox" name="bookTable" value="bookTable" checked>
+                    <label for="bookTableCheckbox">Книги</label>
+                </td>
+                <td>
+                    <input type="checkbox" id="bookIdCheckbox" name="bookId" value="bookId" checked>
+                    <label for="bookIdCheckbox">id</label>,
+                    <input type="checkbox" id="bookTitleCheckbox" name="bookTitle" value="bookTitle" checked>
+                    <label for="bookTitleCheckbox">название</label>,
+                    <input type="checkbox" id="bookAuthorCheckbox" name="bookAuthor" value="bookAuthor" checked>
+                    <label for="bookAuthorCheckbox">автор</label>,
+                    <input type="checkbox" id="bookDescriptionCheckbox" name="bookDescription" value="bookDescription" checked>
+                    <label for="bookDescriptionCheckbox">описание</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="checkbox-label">
+                    <input type="checkbox" class="checkbox-input" id="bookmarkTableCheckbox" name="bookmarkTable" value="bookmarkTable" checked>
+                    <label for="bookmarkTableCheckbox">Закладки</label>
+                </td>
+                <td>
+                    <input type="checkbox" id="bookmarkIdCheckbox" name="bookmarkId" value="bookmarkId" checked>
+                    <label for="bookmarkIdCheckbox">id</label>,
+                    <input type="checkbox" id="bookmarkNameCheckbox" name="bookmarkName" value="bookmarkName" checked>
+                    <label for="bookmarkNameCheckbox">название</label>,
+                    <input type="checkbox" id="bookmarkPageCheckbox" name="bookmarkPage" value="bookmarkPage" checked>
+                    <label for="bookmarkPageCheckbox">страница</label>,
+                    <input type="checkbox" id="bookmarkClientCheckbox" name="bookmarkClient" value="bookmarkClient" checked>
+                    <label for="bookmarkClientCheckbox">клиент</label>,
+                    <input type="checkbox" id="bookmarkBookCheckbox" name="bookmarkBook" value="bookmarkBook" checked>
+                    <label for="bookmarkBookCheckbox">книга</label>,
+                    <input type="checkbox" id="bookmarkDescriptionCheckbox" name="bookmarkDescription" value="bookmarkDescription" checked>
+                    <label for="bookmarkDescriptionCheckbox">описание</label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </form>
+    <hr>
 
-    <hr class="my-4">
-    <div class="d-flex justify-content-between my-2">
-        <a class="btn btn-custom2" href="/">Назад в меню</a>
+    <div class="search-row text-center">
+        <label for="searchInput" class="form-label font-weight-bold">Поиск:</label>
+        <input type="text" class="form-control" id="searchInput" placeholder="Введите запрос" onchange="sendSearchRequest()">
     </div>
+
+</div>
+
+<hr>
+<br>
+
+<table class="table table-fields">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th class="action-label">Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <!-- Вывод данных для таблицы "Клиенты" -->
+    <tr th:each="client : ${clients}">
+        <td th:text="${client.id}">ID</td>
+        <td th:text="${client.name}">Name</td>
+        <td class="action-label">
+            <!-- Ваши кнопки или действия для каждой строки -->
+        </td>
+    </tr>
+
+    <!-- Вывод данных для таблицы "Авторы" -->
+    <tr th:each="author : ${authors}">
+        <td th:text="${author.id}">ID</td>
+        <td th:text="${author.name}">Name</td>
+        <td class="action-label">
+            <!-- Ваши кнопки или действия для каждой строки -->
+        </td>
+    </tr>
+
+    <!-- Вывод данных для таблицы "Книги" -->
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}">ID</td>
+        <td th:text="${book.name}">Name</td>
+        <td class="action-label">
+            <!-- Ваши кнопки или действия для каждой строки -->
+        </td>
+    </tr>
+
+    <!-- Вывод данных для таблицы "Закладки" -->
+    <tr th:each="bookmark : ${bookmarks}">
+        <td th:text="${bookmark.id}">ID</td>
+        <td th:text="${bookmark.name}">Name</td>
+        <td class="action-label">
+            <!-- Ваши кнопки или действия для каждой строки -->
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+<hr>
+
+<div class="d-flex justify-content-between my-2">
+    <a class="btn btn-custom2" href="/">Назад в меню</a>
+</div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script>
+    function sendSearchRequest() {
+        var searchString = document.getElementById("searchInput").value;
+
+        // Получение состояний чекбоксов
+        var checkboxes = document.querySelectorAll('input[type=checkbox]');
+        var checkboxStates = {};
+        checkboxes.forEach(function (checkbox) {
+            checkboxStates[checkbox.name] = checkbox.checked;
+        });
+
+        // Формирование GET-запроса с параметрами
+        var url = "/search?search=" + encodeURIComponent(searchString);
+        for (var key in checkboxStates) {
+            url += "&" + key + "=" + checkboxStates[key];
+        }
+
+        window.location.href = url;
+    }
+</script>
 </body>
 </html>

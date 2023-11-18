@@ -14,12 +14,12 @@ public class Bookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookmark_id;
 
-    @NotEmpty(message = "Name should not be empty")
+    @NotEmpty(message = "Имя не должно быть пустым")
     @Size(max = 255, message = "Enter correct name")
     @Column(name = "name")
     private String name;
 
-    @NotNull(message = "Page should not be empty")
+    @NotNull(message = "Страница не должно быть пустой")
     @Column(name = "page")
     private int page;
     @Column(name = "description")
@@ -27,12 +27,12 @@ public class Bookmark {
 
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "book_id")
-    @NotNull(message = "Book should not be empty")
+    @NotNull(message = "Книга не должна быть пустой")
     private Book book;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    @NotNull(message = "User should not be empty")
+    @NotNull(message = "Клиент не должно быть пустым")
     private User user;
 
     public Bookmark(String name, int page, String description) {

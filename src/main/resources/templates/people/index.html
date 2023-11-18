@@ -87,8 +87,13 @@
 
 <div class="container mt-4">
 
-    <div class="mb-3">
+    <div class="d-flex justify-content-between my-2">
         <p><strong>Количество клиентов: </strong><span th:text="${peopleCount}"></span></p>
+        <form action="/people" method="get" class="form-inline">
+            <div class="form-group">
+                <input type="text" class="form-control" id="searchInput" name="search" placeholder="Поиск" oninput="performSearch()" value="${searchParam}" autocomplete="off">
+            </div>
+        </form>
     </div>
 
     <table class="table">
@@ -96,6 +101,7 @@
         <tr>
             <th>ID</th>
             <th>Имя</th>
+            <th>Email</th>
             <th class="action-label">Действие</th>
         </tr>
         </thead>
@@ -103,6 +109,7 @@
         <tr>
             <td th:text="${user.getId()}">ID</td>
             <td th:text="${user.getName()}">Name</td>
+            <td th:text="${user.getEmail()}">Email</td>
             <td class="action-label">
                 <a class="btn btn-custom btn-sm" th:href="@{/people/{id}(id=${user.getId()})}">Просмотр</a>
                 <form th:method="DELETE" th:action="@{/people/{id}(id = ${user.getId()})}" th:object="${user}" class="d-inline">
@@ -118,30 +125,30 @@
         <ul class="pagination justify-content-center">
 
             <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
-                <a class="page-link" th:href="@{/people(page=0)}" aria-label="First">
+                <a class="page-link" th:href="@{/people(page=0, search=${searchParam})}" aria-label="First">
                     <span aria-hidden="true">&laquo;&laquo;</span>
                 </a>
             </li>
 
             <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
-                <a class="page-link" th:href="@{/people(page=${currentPage - 1})}" aria-label="Previous">
+                <a class="page-link" th:href="@{/people(page=${currentPage - 1}, search=${searchParam})}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
             <li th:each="pageNumber : ${pageNumbers}"
                 th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
-                <a class="page-link" th:href="@{/people(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                <a class="page-link" th:href="@{/people(page=${pageNumber}, search=${searchParam})}" th:text="${pageNumber + 1}"></a>
             </li>
 
             <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
-                <a class="page-link" th:href="@{/people(page=${currentPage + 1})}" aria-label="Next">
+                <a class="page-link" th:href="@{/people(page=${currentPage + 1}, search=${searchParam})}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
 
             <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
-                <a class="page-link" th:href="@{/people(page=${totalPages - 1})}" aria-label="Last">
+                <a class="page-link" th:href="@{/people(page=${totalPages - 1}, search=${searchParam})}" aria-label="Last">
                     <span aria-hidden="true">&raquo;&raquo;</span>
                 </a>
             </li>
@@ -150,25 +157,68 @@
     </nav>
 
     <div class="d-flex justify-content-between my-2">
-        <a class="btn btn-custom2 invisible disabled" href=""></a>
-        <form action="/people" method="get" class="form-inline d-flex justify-content-center align-items-center" onsubmit="updatePageValue()">
+        <a class="btn btn-custom2 invisible disabled" href="/">Назад в меню</a>
+        <form action="/people" method="get" class="form-inline d-flex justify-content-center align-items-center" onsubmit="updatePageValue()" autocomplete="off">
             <input type="number" class="form-control mr-2" name="page" id="pageNumber" min="1" th:max="${totalPages}" value="${currentPage}" required>
+            <input type="hidden" name="search" th:value="${searchParam}">
             <button type="submit" class="btn btn-custom2">Перейти</button>
         </form>
-        <a class="btn btn-custom2 invisible disabled" href=""></a>
+        <a class="btn btn-custom2 invisible disabled" href="/people/new">Добавить клиента</a>
     </div>
 
     <script>
         function updatePageValue() {
             var pageNumberInput = document.getElementById("pageNumber");
             pageNumberInput.value = parseInt(pageNumberInput.value) - 1;
+            pageNumberInput.setAttribute("value", parseInt(pageNumberInput.value) + 1);
         }
     </script>
+
+    <script>
+        function performSearch() {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.form.submit();
+        }
+    </script>
+
+    <script>
+        window.onload = function () {
+            var searchInput = document.getElementById("searchInput");
+            var searchParam = new URLSearchParams(window.location.search).get('search');
+            searchInput.value = searchParam || '';
+        };
+
+        function performSearch() {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.form.submit();
+        }
+    </script>
+
+    <script>
+        var searchTimer;
+
+        function performSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(submitSearchForm, 500);
+        }
+
+        function submitSearchForm() {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.form.submit();
+        }
+
+        window.onload = function () {
+            var searchInput = document.getElementById("searchInput");
+            var searchParam = new URLSearchParams(window.location.search).get('search');
+            searchInput.value = searchParam || '';
+            searchInput.focus();
+        };
+    </script>
+
 
     <hr class="my-4">
     <div class="d-flex justify-content-between my-2">
     <a class="btn btn-custom2" href="/">Назад в меню</a>
-        <a class="btn btn-custom2" href="/search">Поиск</a>
     <a class="btn btn-custom2" href="/people/new">Добавить клиента</a>
     </div>
 </div>

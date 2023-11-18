@@ -43,16 +43,27 @@ public class AuthorController {
     }
 
     @GetMapping()
-    public String index(@RequestParam(name = "page", defaultValue = "0") int page, Model model){
+    public String index(@RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "search", required = false) String search,
+                        Model model) {
+
         int pageSize = 10;
-        Page<Author> authorPage = authorService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
-        int authorsCount = authorService.findAll().size();
+        Page<Author> authorPage;
+        int authorsCount = 0;
+        if (search != null && !search.isEmpty()) {
+            authorPage = authorService.searchAuthors(search, PageRequest.of(page, pageSize, Sort.by("name")));
+            authorsCount = authorService.searchAuthors(search).size();
+        } else {
+            authorPage = authorService.findAll(PageRequest.of(page, pageSize, Sort.by("name")));
+            authorsCount = authorService.findAll().size();
+        }
         List<Integer> pageNumbers = CalculatePageNumbers.calculatePageNumbers(page, authorPage.getTotalPages());
         model.addAttribute("authors", authorPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("authorsCount", authorsCount);
         model.addAttribute("totalPages", authorPage.getTotalPages());
         model.addAttribute("pageNumbers", pageNumbers);
+        model.addAttribute("searchParam", search);
         return "authors/index";
     }
 
@@ -69,11 +80,10 @@ public class AuthorController {
         return "authors/new";
     }
 
-    @GetMapping("/{id}/new")
+    @GetMapping("/{id}/newBook")
     public String newBookWithAuthor(@PathVariable("id") int id, Model model, @ModelAttribute("book") Book book){
         model.addAttribute("author", authorService.findOne(id));
-        model.addAttribute("book", new Book());
-        return "books/newWithAuthor";
+        return "authors/newWithAuthor";
     }
 
     @PostMapping()
@@ -93,7 +103,7 @@ public class AuthorController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("author") Author author, BindingResult bindingResult, @PathVariable("id") int id){
+    public String update(@ModelAttribute("author") @Valid Author author, BindingResult bindingResult, @PathVariable("id") int id){
         author.setAuthor_id(id);
         authorValidator.validate(author, bindingResult);
         if(bindingResult.hasErrors()){
@@ -110,12 +120,13 @@ public class AuthorController {
     }
 
     @PostMapping("/{id}/newBook")
-    public String createNewBook(@ModelAttribute("book") @Valid Book book, @PathVariable("id") int id, BindingResult bindingResult, Model model){
+    public String createNewBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, Model model, @PathVariable String id){
         booksValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()){
-            List<Author> authors = authorService.findAll();
+            List<Author> authors = authorService.findAll(Sort.by("name"));
             model.addAttribute("authors", authors);
-            return "books/newWithAuthor";
+            model.addAttribute("author", authorService.findOne(Integer.parseInt(id)));
+            return "authors/newWithAuthor";
         }
         booksService.save(book);
         return "redirect:/authors/" + id;

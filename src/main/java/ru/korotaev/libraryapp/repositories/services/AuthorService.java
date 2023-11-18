@@ -73,4 +73,12 @@ public class AuthorService {
         }
         return null;
     }
+
+    public Page<Author> searchAuthors(String query, Pageable pageable) {
+        return authorRepository.findByNameContainingIgnoreCaseOrBiographyContainingIgnoreCase(query, query, pageable);
+    }
+
+    public List<Author> searchAuthors(String query) {
+            return authorRepository.findByNameContainingIgnoreCaseOrBiographyContainingIgnoreCase(query, query);
+    }
 }

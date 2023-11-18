@@ -19,4 +19,10 @@ public interface PeopleRepository extends JpaRepository<User, Integer> {
     Page<User> findAll(Pageable pageable);
 
     List<User> findAll(Sort sort);
+
+    List<User> findByNameContaining(String search);
+
+    Page<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(String name, String authorName, Pageable pageable);
+
+    List<User> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(String name, String authorName);
 }

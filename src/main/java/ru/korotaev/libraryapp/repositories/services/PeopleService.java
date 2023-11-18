@@ -111,4 +111,12 @@ public class PeopleService {
         return Collections.emptyList();
     }
 
+    public Page<User> searchUsers(String query, Pageable pageable) {
+        return peopleRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query, pageable);
+    }
+
+    public List<User> searchUsers(String query) {
+        return peopleRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query);
+    }
+
 }

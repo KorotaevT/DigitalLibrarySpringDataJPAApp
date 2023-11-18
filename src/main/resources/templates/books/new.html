@@ -87,7 +87,7 @@
 </div>
 
 <div class="container">
-    <form th:method="POST" th:action="@{/books}" th:object="${book}">
+    <form th:method="POST" th:action="@{/books}" th:object="${book}" autocomplete="off">
         <label for="name">Введите название книги:</label>
         <input type="text" th:field="*{name}" id="name"/>
         <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка в названии книги</div>
